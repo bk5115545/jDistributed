@@ -1,0 +1,10 @@
+
+public class ConfigLoader {
+
+	private static String filename = "Config.conf";
+	
+	
+	public ConfigLoader() {
+		
+	}
+}

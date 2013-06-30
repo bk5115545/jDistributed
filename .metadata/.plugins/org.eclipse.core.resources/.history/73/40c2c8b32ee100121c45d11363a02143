@@ -1,0 +1,7 @@
+
+public class Config {
+	public static boolean isServer = true;
+	public static boolean isProcessor = true;
+	public static int serverPort = 10100;
+	public static int processorPort = 10101;
+}

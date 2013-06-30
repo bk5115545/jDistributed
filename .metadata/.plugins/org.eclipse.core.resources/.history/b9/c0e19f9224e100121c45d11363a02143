@@ -1,0 +1,15 @@
+import java.io.File;
+
+
+public class ConfigLoader {
+
+	private static String filename = "Config.conf";
+	
+	
+	public ConfigLoader() {
+		File f = new File(filename);
+		if(f==null || !f.exists()) {
+			
+		}
+	}
+}

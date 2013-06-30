@@ -1,0 +1,51 @@
+import java.util.concurrent.TimeUnit;
+
+
+public class Main {
+	public static Processor processor = new Processor(8);
+	public static void main(String[] args) {
+		processor.start();
+		for(int i=0; i<100; i++) {
+			allocateJob(new Job("Testing", new Program(TestFile.class)));
+		}
+
+		waitForJobsFinish();
+		System.exit(0);
+	}
+
+	/**
+	 * Waits at most 1 second for jobs to finish while refusing to accept more jobs.
+	 */
+	private static void waitForJobsFinish() {
+		System.out.println("Shutting down...");
+		try {
+			processor.executor.shutdown();
+			processor.executor.awaitTermination(5, TimeUnit.SECONDS);
+		} catch (InterruptedException e1) {}
+		processor.kill();
+		processor.interrupt();
+	}
+
+	/**
+	 * Allocates a given program to the least busy processor.  Heavily optimized.
+	 * @param The Program to allocate.
+	 * @return The allocated Processor or null if it was pushed to a different computer.
+	 */
+	public static Processor allocateJob(Job p) {
+		//cache processor.totalThreads number of jobs
+		if(processor.getAvailableThreadCount()<0-processor.totalThreads || processor.executor.isShutdown()) return pushJobToNext(p);
+		else processor.jobs.add(p);
+		return processor;
+	}
+
+	/**
+	 * Will be responsible for pushing the job to a different computer over a network.  for now does nothing and the job is lost.
+	 * @param the Job to send away
+	 * @return null
+	 */
+	private static Processor pushJobToNext(Job p) {
+		System.out.println("Job to be pushed to another processor... later");
+		return null;
+	}
+
+}

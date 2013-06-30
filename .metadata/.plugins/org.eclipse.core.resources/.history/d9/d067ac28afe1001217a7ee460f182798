@@ -1,0 +1,32 @@
+
+public class Program {
+
+	private Object[] arguements = null;
+	
+	@SuppressWarnings("rawtypes")
+	Class toCall = null;
+	
+	@SuppressWarnings("rawtypes")
+	public Program(Class c) {
+		toCall = c;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Program(Class c, Object[] arguements) {
+		toCall = c;
+		this.arguements = arguements;
+	}
+	
+	
+
+	@SuppressWarnings("unused")
+	@Override
+	public void run() {
+		try {
+			Object instance = toCall.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

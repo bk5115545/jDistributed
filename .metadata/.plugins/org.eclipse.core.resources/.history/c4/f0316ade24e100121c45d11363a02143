@@ -1,0 +1,23 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.AccessDeniedException;
+
+
+public class ConfigLoader {
+
+	private static String filename = "Config.conf";
+	
+	
+	@SuppressWarnings("unused")
+	public ConfigLoader() {
+		File f = new File(filename);
+		if(f==null || !f.exists()) {
+			if(f==null) {
+				throw new NullPointerException("f is null for filename: " + filename); 
+			}
+			else if(f.canWrite()) {
+				
+			} else throw new AccessDeniedException("You do not have premission to create file: \"" + filename + "\" at " + f.getAbsolutePath());
+		}
+	}
+}

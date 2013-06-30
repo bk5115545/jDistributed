@@ -1,0 +1,28 @@
+
+public class Job implements Runnable {
+	
+	public long id = 0L;
+	public String name = "";
+	
+	private Program prog = null;
+	
+	public Job(Program p) {
+		this.prog = p;
+		
+		createID();
+	}
+	
+	public void execute() {
+		prog.run(); //not threaded (should not be)
+	}
+	
+	private void createID() {
+		id = (long) (System.nanoTime()%(Math.random()*1000000000000000L));
+	}
+
+	@Override
+	public void run() {
+		execute();
+	}
+
+}

@@ -1,0 +1,21 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+
+
+public class ServerThread implements Runnable {
+
+	@Override
+	public void run() {
+		try {
+			ServerSocket server = new ServerSocket(Config.serverPort);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		while(true) {
+			
+		}
+		
+	}
+
+}

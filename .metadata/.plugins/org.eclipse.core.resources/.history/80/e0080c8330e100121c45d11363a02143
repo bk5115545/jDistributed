@@ -1,0 +1,15 @@
+import java.net.ServerSocket;
+
+
+public class ServerThread implements Runnable {
+
+	@Override
+	public void run() {
+		ServerSocket server = new ServerSocket(Config.serverPort);
+		while(true) {
+			
+		}
+		
+	}
+
+}

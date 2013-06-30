@@ -1,0 +1,49 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+
+
+public class ConfigLoader {
+
+	private static String filename = "Config.conf";
+	
+	@SuppressWarnings("unused")
+	/**
+	 * Creates the configuration file if it doesn't exist and loads the contents if it does.
+	 * @throws IOException
+	 */
+	public ConfigLoader() throws IOException {
+		File f = new File(filename);
+		if(f==null || !f.exists()) {
+			if(f==null) {
+				throw new NullPointerException("f is null for filename: " + filename); 
+			}
+			else if(f.canWrite()) {
+				f.createNewFile();
+				writeDefaults(f);
+			} else throw new AccessDeniedException("You do not have premission to create file: \"" + filename + "\" at " + f.getAbsolutePath());
+		}
+	}
+
+	/**
+	 * Writes the default configuration settings to the specified file.
+	 * @param f
+	 * @throws IOException 
+	 */
+	public void writeDefaults(File f) throws IOException {
+		FileWriter fout = new FileWriter(f);
+		
+		fout.write("isServer=true\n");
+		fout.write("isProcessor=true\n");
+		fout.write("serverPort=10100\n");
+		fout.write("processorPort=10101\n");
+		
+		fout.close();
+	}
+	
+	public void load(File f) {
+		FileReader fin = new FileReader(f);
+	}
+}

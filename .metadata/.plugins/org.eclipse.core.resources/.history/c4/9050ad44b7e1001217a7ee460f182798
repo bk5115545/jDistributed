@@ -1,0 +1,59 @@
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+
+public class Job implements Runnable {
+
+	public long id = 0L;
+	public String name = "";
+
+	public InetSocketAddress origin = null;
+
+
+	private Program prog = null;
+
+	public Job(Program p) {
+		this.prog = p;
+
+		Enumeration<NetworkInterface> interfaces = null;
+		try {
+			interfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e1) {}
+		while (interfaces.hasMoreElements()){
+			NetworkInterface current = interfaces.nextElement();
+			//System.out.println(current);
+			try {
+				if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+			} catch (SocketException e) {}
+			Enumeration<InetAddress> addresses = current.getInetAddresses();
+			while (addresses.hasMoreElements()){
+				InetAddress current_addr = addresses.nextElement();
+				if(current_addr.getHostAddress().startsWith("name") || current_addr.getHostAddress().contains(":")) continue;
+				if (current_addr.isLoopbackAddress()) continue;
+				origin = new InetSocketAddress(current_addr.getHostAddress(), port);
+			}
+		}
+
+		//origin = new InetSocketAddress(System., arg1)
+
+		createID();
+	}
+
+	public void execute() {
+		prog.run(); //not threaded (should not be). allows for reusing of jobs if we ever want it
+	}
+
+	private void createID() {
+		id = (long) (System.nanoTime()%(Math.random()*1000000000000000L));
+	}
+
+	@Override
+	public void run() {
+		execute();
+	}
+
+}

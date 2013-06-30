@@ -1,0 +1,6 @@
+
+public class Job {
+	
+	public long id = 0L;
+
+}

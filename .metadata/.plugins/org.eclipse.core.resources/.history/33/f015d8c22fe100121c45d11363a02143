@@ -1,0 +1,14 @@
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+
+
+public class ServerThread implements Runnable {
+
+	@Override
+	public void run() {
+		Object myConfig = (new ObjectOutputStream());
+		
+	}
+
+}

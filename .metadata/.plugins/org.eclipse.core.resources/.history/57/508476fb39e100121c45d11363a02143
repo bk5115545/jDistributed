@@ -1,0 +1,32 @@
+
+public class Main {
+
+	private static final Processor[] processors = new Processor[4];
+	
+	public static void main(String[] args) {
+		for(int i=0; i <processors.length; i++) {
+			processors[i] = new Processor(2);
+			processors[i].start();
+		}
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				for(Processor p : processors) p.kill();
+			}
+		}));
+		
+		System.exit(0);
+	}
+	
+	public static Processor allocateProgram(Program p) {
+		Processor p = processors[0];
+		for(int i=1; i<processors.length; i++) {
+			
+		}
+	}
+
+}

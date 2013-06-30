@@ -1,0 +1,17 @@
+import java.net.Socket;
+
+
+public class Connection {
+
+	public boolean dataSynced = false;
+	public ServerThread serverThread = null;
+	public ProcessorThread processorThread = null;
+	public boolean isServer = false;
+	public boolean isProcessor = false;
+	public int serverPort = 10100;
+	public int processorPort = 10101;
+	
+	public Connection() {
+		
+	}
+}

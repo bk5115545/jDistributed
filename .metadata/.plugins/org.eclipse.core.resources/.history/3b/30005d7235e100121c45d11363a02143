@@ -1,0 +1,19 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
+
+public class Processor {
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	List<Program> jobs = Collections.synchronizedList(new ArrayList());
+	ExecutorService executor = null;
+	
+	public Processor(int threadCount) {
+		executor = Executors.newFixedThreadPool(threadCount);
+	}
+
+}

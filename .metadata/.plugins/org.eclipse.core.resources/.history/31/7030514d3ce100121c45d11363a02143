@@ -1,0 +1,10 @@
+
+public class TestFile {
+	
+	public TestFile() {
+		try {
+			System.out.println("Program.....");
+			Thread.currentThread().sleep(100);
+		} catch (Exception e) {e.printStackTrace();}
+	}
+}

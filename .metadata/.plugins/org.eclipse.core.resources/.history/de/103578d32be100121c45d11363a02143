@@ -1,0 +1,9 @@
+
+public class Connection {
+
+	public boolean isServer = false;
+	public boolean isProcessor = false;
+	public int serverPort = 10100;
+	public int processorPort = 10101;
+
+}

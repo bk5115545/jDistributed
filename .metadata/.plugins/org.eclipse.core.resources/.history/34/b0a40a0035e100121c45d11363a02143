@@ -1,0 +1,18 @@
+
+public class Program {
+	
+	Class toCall = null;
+	
+	public Program(Class c) {
+		toCall = c;
+	}
+	
+	public void begin() {
+		try {
+			Object instance = toCall.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

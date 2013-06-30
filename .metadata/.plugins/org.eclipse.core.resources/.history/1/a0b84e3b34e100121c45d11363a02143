@@ -1,0 +1,13 @@
+import java.io.File;
+
+
+public class Program {
+
+	File toExecute = null;
+	Class toCall = null;
+	
+	public Program(Class c, File toE) {
+		
+	}
+	
+}

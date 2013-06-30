@@ -1,0 +1,11 @@
+
+public class Job {
+	
+	public long id = 0L;
+	public String name = "";
+	
+	public Job(Program p) {
+		
+	}
+
+}

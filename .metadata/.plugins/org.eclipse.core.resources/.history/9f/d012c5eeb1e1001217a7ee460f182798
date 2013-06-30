@@ -1,0 +1,50 @@
+import java.util.concurrent.TimeUnit;
+
+
+public class Main {
+	private static Processor processor = new Processor(8);
+	public static void main(String[] args) {
+		processor.start();
+		for(int i=0; i<5000; i++) {
+			allocateJob(new Job(new Program(TestFile.class)));
+		}
+		
+		waitForJobsFinish();
+		System.exit(0);
+	}
+	
+	private static void waitForJobsFinish() {
+		System.out.println("Shutting down...");
+		for(int i=0; i<processors.length; i++) {
+			try {
+				processors[i].executor.awaitTermination(60, TimeUnit.SECONDS);
+			} catch (InterruptedException e1) {}
+			while(processors[i].jobs.size() > 0) try {
+				//System.out.println(i + " " + processors[i].jobs.size());
+				Thread.sleep(100);
+			} catch (InterruptedException e) { 
+				System.out.println("Processor shutdown interrupted!"); 
+			}
+			processors[i].kill();
+		}
+	}
+
+	/**
+	 * Allocates a given program to the least busy processor.  Heavily optimized.
+	 * @param The Program to allocate.
+	 * @return The allocated Processor
+	 */
+	public static Processor allocateJob(Job p) {
+		Processor p2 = processors[0];
+		if(p2.jobs.size() == 0) {
+			p2.jobs.add(p);
+			return p2;
+		}
+		for(int i=1; i<processors.length; i++) {
+			if(processors[i].jobs.size() < p2.jobs.size()) p2 = processors[i];
+		}
+		p2.jobs.add(p);
+		return p2;
+	}
+
+}

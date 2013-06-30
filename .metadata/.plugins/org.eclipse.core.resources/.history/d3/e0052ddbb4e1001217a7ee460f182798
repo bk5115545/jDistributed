@@ -1,0 +1,32 @@
+import java.net.InetAddress;
+
+
+public class Job implements Runnable {
+	
+	public long id = 0L;
+	public String name = "";
+	
+	public InetAddress origin = null;
+	
+	private Program prog = null;
+	
+	public Job(Program p) {
+		this.prog = p;
+		
+		createID();
+	}
+	
+	public void execute() {
+		prog.run(); //not threaded (should not be). allows for reusing of jobs if we ever want it
+	}
+	
+	private void createID() {
+		id = (long) (System.nanoTime()%(Math.random()*1000000000000000L));
+	}
+
+	@Override
+	public void run() {
+		execute();
+	}
+
+}

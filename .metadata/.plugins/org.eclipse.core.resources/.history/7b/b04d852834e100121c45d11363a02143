@@ -1,0 +1,7 @@
+
+public class Program {
+
+	File toExecute = null;
+	Class toCall = null;
+	
+}

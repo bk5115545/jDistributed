@@ -1,0 +1,16 @@
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class MeshNetwork {
+	
+	public static Set<Connection> s = Collections.synchronizedSet(new HashSet<Connection>());
+	
+	public static Set<Connection> getServers() {
+		Set<Connection> c = new HashSet<Connection>();
+		for(Connection con : s) if(con.isServer) c.add(con);
+		return c;
+	}
+
+}

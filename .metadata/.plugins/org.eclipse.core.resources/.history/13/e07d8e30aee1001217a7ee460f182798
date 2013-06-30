@@ -1,0 +1,13 @@
+
+public class Job {
+	
+	public long id = 0L;
+	public String name = "";
+	
+	private Program prog = null;
+	
+	public Job(Program p) {
+		this.prog = p;
+	}
+
+}

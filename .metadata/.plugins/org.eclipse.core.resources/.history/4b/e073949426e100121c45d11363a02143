@@ -1,0 +1,5 @@
+
+public class Config {
+	public static boolean isServer = true;
+	public static boolean isProcessor = true;
+}

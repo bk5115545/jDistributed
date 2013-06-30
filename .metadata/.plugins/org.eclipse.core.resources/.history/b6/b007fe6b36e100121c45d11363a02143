@@ -1,0 +1,21 @@
+
+public class Program {
+	
+	@SuppressWarnings("rawtypes")
+	Class toCall = null;
+	
+	@SuppressWarnings("rawtypes")
+	public Program(Class c) {
+		toCall = c;
+	}
+	
+	@SuppressWarnings("unused")
+	public void begin() {
+		try {
+			Object instance = toCall.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

@@ -1,0 +1,20 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
+public class ServerThread implements Runnable {
+
+	@Override
+	public void run() {
+		try {
+			ServerSocket server = new ServerSocket(Config.serverPort);
+			Socket peer = server.accept();
+			Connection con = new Connection(peer.getInetAddress(), peer.getLocalPort());
+			con.isServer = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

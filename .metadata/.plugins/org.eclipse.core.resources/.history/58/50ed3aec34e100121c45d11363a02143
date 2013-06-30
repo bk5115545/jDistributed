@@ -1,0 +1,12 @@
+import java.util.Collections;
+
+
+public class Processor {
+	
+	List<Program> jobs = Collections.synchronizedList(new ArrayList());
+	
+	public Processor() {
+		
+	}
+
+}

@@ -1,0 +1,24 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
+public class Processor extends Thread {
+	
+	private boolean running = true;
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	List<Program> jobs = Collections.synchronizedList(new ArrayList());
+	ExecutorService executor = null;
+	
+	public Processor(int threadCount) {
+		executor = Executors.newFixedThreadPool(threadCount);
+	}
+	
+	public void run() {
+		
+	}
+
+}

@@ -1,0 +1,15 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
+public class Processor {
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	List<Program> jobs = Collections.synchronizedList(new ArrayList());
+	
+	public Processor() {
+		
+	}
+
+}
