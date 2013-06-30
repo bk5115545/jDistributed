@@ -1,0 +1,52 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+
+
+public class ServerThread implements Runnable {
+
+	private boolean active = true;
+	private ServerSocket server = null;
+	
+	public ServerThread() throws IOException {
+		server = new ServerSocket(Config.serverPort);
+	}
+	
+	@SuppressWarnings("static-access")
+	@Override
+	public void run() {
+		try {
+			while(active) {
+				Socket peer = server.accept();
+				Connection con = new Connection(peer.getInetAddress(), peer.getLocalPort());
+				System.out.println(peer.getInetAddress());
+				
+				ObjectInputStream configin = new ObjectInputStream(peer.getInputStream());
+				Config remoteConfig = (Config) configin.readObject();
+				con.isProcessor = remoteConfig.isProcessor;
+				con.isServer = remoteConfig.isServer;
+				con.serverPort = remoteConfig.serverPort;
+				con.processorPort = remoteConfig.processorPort;
+				
+				configin.close();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void kill() throws SocketException {
+		active = false;
+		server.setSoTimeout(0);
+	}
+
+}
