@@ -1,55 +1,53 @@
+import java.util.concurrent.TimeUnit;
+
 
 public class Main {
-
-	private static final Processor[] processors = new Processor[4];
-	
+	public static Processor processor = new Processor(8);
 	public static void main(String[] args) {
-		for(int i=0; i <processors.length; i++) {
-			processors[i] = new Processor(2);
-			//processors[i].start();
+		processor.start();
+		for(int i=0; i<100; i++) {
+			allocateJob(new Job("Testing", new Program(TestFile.class)));
 		}
-		for(int i=0; i<5000; i++) {
-			allocateProgram(new Program(TestFile.class));
-		}
-		
-		for(int i=0; i <processors.length; i++) {
-			//processors[i] = new Processor(2);
-			processors[i].start();
-		}
-		
+
 		waitForJobsFinish();
 		System.exit(0);
 	}
-	
+
+	/**
+	 * Waits at most 10 seconds for jobs to finish while refusing to accept more jobs.
+	 * Refused jobs are forwarded on the network processor chain.
+	 */
 	private static void waitForJobsFinish() {
 		System.out.println("Shutting down...");
-		for(int i=0; i<processors.length; i++) {
-			while(processors[i].jobs.size() > 0) try {
-				//System.out.println(i + " " + processors[i].jobs.size());
-				Thread.sleep(100);
-			} catch (InterruptedException e) { 
-				System.out.println("Processor shutdown interrupted"); 
-			}
-			processors[i].kill();
-		}
+		try {
+			Thread.sleep(5000);
+			processor.executor.shutdown();
+			processor.executor.awaitTermination(5, TimeUnit.SECONDS);
+		} catch (InterruptedException e1) {}
+		processor.kill();
+		processor.interrupt();
 	}
 
 	/**
 	 * Allocates a given program to the least busy processor.  Heavily optimized.
 	 * @param The Program to allocate.
-	 * @return The allocated Processor
+	 * @return The allocated Processor or null if it was pushed to a different computer.
 	 */
-	public static Processor allocateProgram(Program p) {
-		Processor p2 = processors[0];
-		if(p2.jobs.size() == 0) {
-			p2.jobs.add(p);
-			return p2;
-		}
-		for(int i=1; i<processors.length; i++) {
-			if(processors[i].jobs.size() < p2.jobs.size()) p2 = processors[i];
-		}
-		p2.jobs.add(p);
-		return p2;
+	public static Processor allocateJob(Job p) {
+		//cache processor.totalThreads number of jobs
+		if(processor.getAvailableThreadCount()<0-processor.totalThreads || processor.executor.isShutdown()) return pushJobToNext(p);
+		else processor.jobs.add(p);
+		return processor;
+	}
+
+	/**
+	 * Will be responsible for pushing the job to a different computer over a network.  For now does nothing and the job is lost.
+	 * @param the Job to send away
+	 * @return null
+	 */
+	private static Processor pushJobToNext(Job p) {
+		System.out.println("Job to be pushed to another processor... later");
+		return null;
 	}
 
 }

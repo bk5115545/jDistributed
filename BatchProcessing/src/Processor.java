@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,13 +9,17 @@ public class Processor extends Thread {
 
 	private boolean running = true;
 	private boolean active = true;
+	
+	public int totalThreads = 0;
+	private int usedThreads = 0;
 
-	Set<Program> jobs = Collections.synchronizedSet(new HashSet<Program>());
-	Program[] cache = null;
+	Set<Job> jobs = Collections.synchronizedSet(new HashSet<Job>());
+	Job[] cache = null;
 	ExecutorService executor = null;
 
 	public Processor(int threadCount) {
 		executor = Executors.newFixedThreadPool(threadCount);
+		totalThreads = threadCount;
 	}
 
 	@SuppressWarnings("static-access")
@@ -30,17 +32,30 @@ public class Processor extends Thread {
 				} catch (InterruptedException e) {continue;}
 			} else {
 				if(jobs.size()>0) {
-					cache = jobs.toArray(new Program[0]);
-					for(Program p : cache) {
+					cache = jobs.toArray(new Job[0]);
+					for(Job j : cache) {
 						if(!running || !active) break;
-						executor.execute(p);
-						jobs.remove(p); //need something better to not double process jobs (this will probably concurrentAccessModificiation error often) (cache completed jobs maybe)
+						executor.execute(j);
+						jobs.remove(j);
+						usedThreads++;
 					}
 				} else try {
-					Thread.currentThread().sleep(10);
+					Thread.currentThread().sleep(1);
 				} catch (InterruptedException e) {}
 			}
 		}
+	}
+	
+	/**
+	 * Queries the total job count minus the jobs currently executing
+	 * @return If the returned number is negative then there are Math.abs number of jobs left in the queue.
+	 */
+	public int getAvailableThreadCount() {
+		return totalThreads-usedThreads;
+	}
+	
+	public void programFinished() {
+		usedThreads--;
 	}
 
 	public void kill() {

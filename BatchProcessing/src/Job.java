@@ -1,0 +1,62 @@
+import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
+
+public class Job implements Runnable, Serializable {
+	private static final long serialVersionUID = -6217077945521174001L;
+	
+	private static transient InetSocketAddress myLocation = null;
+	
+	public long id = 0L;
+	public String name = "";
+
+	public InetSocketAddress origin = null;
+
+
+	private Program prog = null;
+
+	public Job(String name, Program p) {
+		this.prog = p;
+		if(myLocation == null && origin == null) {
+			Enumeration<NetworkInterface> interfaces = null;
+			try {
+				interfaces = NetworkInterface.getNetworkInterfaces();
+			} catch (SocketException e1) {}
+			while (interfaces.hasMoreElements()){
+				NetworkInterface current = interfaces.nextElement();
+				//System.out.println(current);
+				try {
+					if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+				} catch (SocketException e) {}
+				Enumeration<InetAddress> addresses = current.getInetAddresses();
+				while (addresses.hasMoreElements()){
+					InetAddress current_addr = addresses.nextElement();
+					if(current_addr.getHostAddress().startsWith("name") || current_addr.getHostAddress().contains(":")) continue;
+					if (current_addr.isLoopbackAddress()) continue;
+					origin = new InetSocketAddress(current_addr.getHostAddress(), 0); //the system will pick an available port
+					myLocation = new InetSocketAddress(current_addr.getHostAddress(), 0);
+				}
+			}
+		}
+
+		createID();
+	}
+
+	public void execute() {
+		prog.run(); //not threaded (should not be). allows for reusing of jobs if we ever want it
+	}
+
+	private void createID() {
+		id = (long) (System.nanoTime()%(Math.random()*1000000000000000L))^name.hashCode(); //probably unique enough without the ^ but if a name is set then it is defintly unique
+	}
+
+	@Override
+	public void run() {
+		execute();
+	}
+
+}
